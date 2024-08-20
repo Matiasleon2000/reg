@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const nombre = urlParams.get('nombre') || 'No disponible';
     const rut = urlParams.get('rut') || 'No disponible';
     const contacto = urlParams.get('contacto') || 'No disponible';
+    const fechainicio = urlParams.get('fechainicio') || 'No disponible';
+    const fechatermino = urlParams.get('fechatermino') || 'No disponible';
   
     // Muestra los datos en la página
     const dataContainer = document.getElementById('data-container');
@@ -16,10 +18,12 @@ document.addEventListener('DOMContentLoaded', function() {
       <p><strong>Nombre:</strong> ${nombre}</p>
       <p><strong>RUT:</strong> ${rut}</p>
       <p><strong>Contacto:</strong> ${contacto}</p>
+      <p><strong>fecha de inicio:</strong> ${fechainicio}</p>
+      <p><strong>fecha de termino:</strong> ${fechatermino}</p>
     `;
   
     // Genera la URL para el código QR
-    const qrData = `Patente: ${patente} | Empresa: ${empresa} | Nombre: ${nombre} | RUT: ${rut} | Contacto: ${contacto}`;
+    const qrData = `Patente: ${patente} | Empresa: ${empresa} | Nombre: ${nombre} | RUT: ${rut} | Contacto: ${contacto} | fechainicio: ${fechainicio} | fechatermino: ${fechatermino}`;
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrData)}`;
   
     // Muestra el código QR en la página
