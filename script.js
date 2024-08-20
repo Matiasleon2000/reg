@@ -18,8 +18,8 @@ document.addEventListener('DOMContentLoaded', function() {
       <p><strong>Nombre:</strong> ${nombre}</p>
       <p><strong>RUT:</strong> ${rut}</p>
       <p><strong>Contacto:</strong> ${contacto}</p>
-      <p><strong>fecha de inicio:</strong> ${fechainicio}</p>
-      <p><strong>fecha de termino:</strong> ${fechatermino}</p>
+      <p><strong>Fecha de inicio:</strong> ${fechainicio}</p>
+      <p><strong>Fecha de término:</strong> ${fechatermino}</p>
     `;
   
     // Genera la URL para el código QR
