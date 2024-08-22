@@ -25,11 +25,13 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
   
     // Genera la URL para el código QR
-    const qrData = `fecharespuesta=${fecharespuesta} | Patente=${patente} | Empresa=${empresa} | Nombre=${nombre} | RUT=${rut} | Contacto=${contacto} | Fecha de inicio=${fechainicio} | Fecha de término=${fechatermino}`;
-    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrData)}`;
+    const qrData = `fecharespuesta=${fecharespuesta} | patente=${patente} | empresa=${empresa} | nombre=${nombre} | rut=${rut} | contacto=${contacto} | fechainicio=${fechainicio} | fechatermino=${fechatermino}`;
+    
+    // Añade un parámetro único para evitar el caché del navegador
+    const timestamp = new Date().getTime();
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrData)}&timestamp=${timestamp}`;
   
     // Muestra el código QR en la página
     const qrCodeImg = document.getElementById('qr-code');
     qrCodeImg.src = qrCodeUrl;
-  });
-
+});
