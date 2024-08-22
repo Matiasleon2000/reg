@@ -31,4 +31,4 @@ document.addEventListener('DOMContentLoaded', function() {
     // Muestra el código QR en la página
     const qrCodeImg = document.getElementById('qr-code');
     qrCodeImg.src = qrCodeUrl;
-  });
+});
