@@ -1,56 +1,81 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const urlParams = new URLSearchParams(window.location.search);
+function onFormSubmit(e) {
+  if (!e || !e.range) {
+    Logger.log("El objeto de evento no está definido.");
+    return;
+  }
 
-    // Obtén los datos de los parámetros de la URL
-    const fecharespuesta = urlParams.get('fecharespuesta') || 'No disponible';
-    const patente = urlParams.get('patente') || 'No disponible';
-    const empresa = urlParams.get('empresa') || 'No disponible';
-    const nombre = urlParams.get('nombre') || 'No disponible';
-    const rut = urlParams.get('rut') || 'No disponible';
-    const contacto = urlParams.get('contacto') || 'No disponible';
-    const fechainicio = urlParams.get('fechainicio') || 'No disponible';
-    const fechatermino = urlParams.get('fechatermino') || 'No disponible';
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var row = e.range.getRow();
 
-    // Muestra los datos en la página
-    const dataContainer = document.getElementById('data-container');
-    dataContainer.innerHTML = `
-      <p><strong>Fecha de Respuesta:</strong> ${fecharespuesta}</p>
-      <p><strong>Patente:</strong> ${patente}</p>
-      <p><strong>Empresa:</strong> ${empresa}</p>
-      <p><strong>Nombre:</strong> ${nombre}</p>
-      <p><strong>RUT:</strong> ${rut}</p>
-      <p><strong>Contacto:</strong> ${contacto}</p>
-      <p><strong>Fecha de inicio:</strong> ${fechainicio}</p>
-      <p><strong>Fecha de término:</strong> ${fechatermino}</p>
-    `;
+  // Obtiene los datos del formulario
+  var fecharespuesta = sheet.getRange(row, 1).getValue();
+  var patente = sheet.getRange(row, 2).getValue(); // Columna B
+  var empresa = sheet.getRange(row, 3).getValue(); // Columna C
+  var rutempresa = sheet.getRange(row, 4).getValue(); // Columna C    
+  var nombre = sheet.getRange(row, 6).getValue();  // Columna E
+  var apellidopaterno = sheet.getRange(row, 7).getValue();  // Columna E
+  var apellidomaterno = sheet.getRange(row, 8).getValue();  // Columna E
+  var rut = sheet.getRange(row, 9).getValue();     // Columna F
+  var contacto = sheet.getRange(row, 10).getValue(); // Columna G
+  var email = sheet.getRange(row, 11).getValue(); // Columna G
 
-    // Genera la URL para el código QR
-    const qrData = `fecharespuesta=${fecharespuesta}&patente=${patente}&empresa=${empresa}&nombre=${nombre}&rut=${rut}&contacto=${contacto}&fechainicio=${fechainicio}&fechatermino=${fechatermino}`;
-    
-    // Añade un parámetro único para evitar el caché del navegador
-    const timestamp = new Date().getTime();
-    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrData)}&timestamp=${timestamp}`;
-    
-    // Imprime la URL del código QR en la consola para verificarla
-    console.log("Código QR generado:", qrCodeUrl);
-    
-    // Muestra el código QR en la página
-    const qrCodeImg = document.getElementById('qr-code');
-    
-    // Asegúrate de que el elemento img existe
-    if (qrCodeImg) {
-        qrCodeImg.src = qrCodeUrl;
+  var fechainicio = sheet.getRange(row, 10).getValue(); // Columna J
+  var fechatermino = sheet.getRange(row, 12).getValue(); // Columna L
 
-        // Verifica si la imagen se carga correctamente
-        qrCodeImg.onerror = function() {
-            console.error("No se pudo cargar el código QR desde la URL:", qrCodeUrl);
-        };
+  // Verifica si las fechas son válidas antes de formatearlas
+  var fechainicioFormatted = fechainicio instanceof Date ? Utilities.formatDate(fechainicio, Session.getScriptTimeZone(), "yyyy-MM-dd") : "Fecha inválida";
+  var fechaterminoFormatted = fechatermino instanceof Date ? Utilities.formatDate(fechatermino, Session.getScriptTimeZone(), "yyyy-MM-dd") : "Fecha inválida";
+  var fecharespuestaFormatted = fecharespuesta instanceof Date ? Utilities.formatDate(fecharespuesta, Session.getScriptTimeZone(), "yyyy-MM-dd HH:mm:ss") : "Fecha inválida";
 
-        qrCodeImg.onload = function() {
-            console.log("Código QR cargado correctamente.");
-        };
-    } else {
-        console.error("Elemento img con id 'qr-code' no encontrado.");
-    }
-});
+  // Obtén el correo electrónico del formulario (asumiendo que está en la columna H)
+  var email = sheet.getRange(row, 8).getValue(); // Ajusta esta columna según corresponda
 
+  // Construye la URL con los datos del formulario
+  var baseURL = "https://matiasleon2000.github.io/reg/"; // Cambia esto a la URL correcta de tu página de confirmación
+  var data = "fecharespuesta=" + encodeURIComponent(fecharespuestaFormatted) +
+             "&patente=" + encodeURIComponent(patente) +
+             "&empresa=" + encodeURIComponent(empresa) +
+             "&nombre=" + encodeURIComponent(nombre) +
+             "&rut=" + encodeURIComponent(rut) +
+             "&contacto=" + encodeURIComponent(contacto) +
+             "&fechainicio=" + encodeURIComponent(fechainicioFormatted) +
+             "&fechatermino=" + encodeURIComponent(fechaterminoFormatted);
+
+  // Genera la URL del código QR
+  var qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(baseURL + "?" + data);
+
+  // Inserta la URL del código QR en la columna adecuada
+  sheet.getRange(row, 14).setValue(qrCodeUrl); // Ajusta la columna para la URL del código QR
+
+  // Inserta la imagen del código QR directamente en la celda
+  var formula = '=IMAGE("' + qrCodeUrl + '")';
+  sheet.getRange(row, 15).setFormula(formula); // Ajusta la columna para la celda donde se debe mostrar la imagen
+
+  // --- Ajuste de tamaño de celdas para el código QR ---
+  sheet.setRowHeight(row, 100);  // Ajusta el tamaño a 100 píxeles
+  sheet.setColumnWidth(15, 100);  // Ajusta el tamaño a 100 píxeles
+
+  // --- Obtener la fecha del día actual ---
+  var fechaHoy = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd");
+
+  // Construye la URL para la página de confirmación
+  var confirmPageUrl = "https://matiasleon2000.github.io/reg/"; // Cambia esto a la URL correcta de tu página de confirmación
+  var confirmUrl = confirmPageUrl + "?fecharespuesta=" + encodeURIComponent(fecharespuestaFormatted) +
+                   "&patente=" + encodeURIComponent(patente) +
+                   "&empresa=" + encodeURIComponent(empresa) +
+                   "&nombre=" + encodeURIComponent(nombre) +
+                   "&rut=" + encodeURIComponent(rut) +
+                   "&contacto=" + encodeURIComponent(contacto) +
+                   "&fechainicio=" + encodeURIComponent(fechainicioFormatted) +
+                   "&fechatermino=" + encodeURIComponent(fechaterminoFormatted);
+
+  // Envía un correo electrónico con el enlace de confirmación
+  if (email) {
+    var subject = "Confirmación de Registro";
+    var body = "Gracias por tu registro. Puedes ver tus datos y el código QR en el siguiente enlace: " + confirmUrl;
+    MailApp.sendEmail(email, subject, body);
+  }
+
+  // Redirige al usuario a la página de confirmación
+  return HtmlService.createHtmlOutput("Redirigiendo a la página de confirmación... <script>window.location='" + confirmUrl + "'</script>");
+}
