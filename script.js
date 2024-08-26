@@ -24,8 +24,9 @@ document.addEventListener('DOMContentLoaded', function() {
       <p><strong>Fecha de término:</strong> ${fechatermino}</p>
     `;
   
-    // Genera la URL para el código QR
-    const qrData = `fecharespuesta=${fecharespuesta} | patente=${patente} | empresa=${empresa} | nombre=${nombre} | rut=${rut} | contacto=${contacto} | fechainicio=${fechainicio} | fechatermino=${fechatermino}`;
+    // Construye la URL para el código QR
+    const baseURL = "https://matiasleon2000.github.io/index.html"; // Cambia esto a la URL de tu página
+    const qrData = `${baseURL}?fecharespuesta=${encodeURIComponent(fecharespuesta)}&patente=${encodeURIComponent(patente)}&empresa=${encodeURIComponent(empresa)}&nombre=${encodeURIComponent(nombre)}&rut=${encodeURIComponent(rut)}&contacto=${encodeURIComponent(contacto)}&fechainicio=${encodeURIComponent(fechainicio)}&fechatermino=${encodeURIComponent(fechatermino)}`;
     
     // Añade un parámetro único para evitar el caché del navegador
     const timestamp = new Date().getTime();
