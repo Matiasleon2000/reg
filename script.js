@@ -24,13 +24,15 @@ document.addEventListener('DOMContentLoaded', function() {
       <p><strong>Fecha de término:</strong> ${fechatermino}</p>
     `;
   
-    // Construye la URL para el código QR
-    const baseURL = "https://matiasleon2000.github.io/reg/"; // Cambia esto a la URL de tu página
-    const qrData = `${baseURL}?fecharespuesta=${encodeURIComponent(fecharespuesta)}&patente=${encodeURIComponent(patente)}&empresa=${encodeURIComponent(empresa)}&nombre=${encodeURIComponent(nombre)}&rut=${encodeURIComponent(rut)}&contacto=${encodeURIComponent(contacto)}&fechainicio=${encodeURIComponent(fechainicio)}&fechatermino=${encodeURIComponent(fechatermino)}`;
+    // Genera la URL para el código QR
+    const qrData = `fecharespuesta=${fecharespuesta}&patente=${patente}&empresa=${empresa}&nombre=${nombre}&rut=${rut}&contacto=${contacto}&fechainicio=${fechainicio}&fechatermino=${fechatermino}`;
     
     // Añade un parámetro único para evitar el caché del navegador
     const timestamp = new Date().getTime();
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrData)}&timestamp=${timestamp}`;
+    
+    // Imprime la URL del código QR en la consola para verificarla
+    console.log("Código QR generado:", qrCodeUrl);
   
     // Muestra el código QR en la página
     const qrCodeImg = document.getElementById('qr-code');
