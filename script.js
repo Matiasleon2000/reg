@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
   
     // Construye la URL para el código QR
-    const baseURL = "https://matiasleon2000.github.io/index.html"; // Cambia esto a la URL de tu página
+    const baseURL = "https://matiasleon2000.github.io/reg.html"; // Cambia esto a la URL de tu página
     const qrData = `${baseURL}?fecharespuesta=${encodeURIComponent(fecharespuesta)}&patente=${encodeURIComponent(patente)}&empresa=${encodeURIComponent(empresa)}&nombre=${encodeURIComponent(nombre)}&rut=${encodeURIComponent(rut)}&contacto=${encodeURIComponent(contacto)}&fechainicio=${encodeURIComponent(fechainicio)}&fechatermino=${encodeURIComponent(fechatermino)}`;
     
     // Añade un parámetro único para evitar el caché del navegador
